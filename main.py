@@ -4,6 +4,7 @@ def main():
     classes = get_css_classes(stylesheet="test files/styles.css")
     print(classes)
 
+
 def get_css_classes(stylesheet):
     with open(stylesheet, 'r') as file:
         content = file.readlines() # Read the contents of CSS file
