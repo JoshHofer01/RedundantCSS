@@ -7,7 +7,6 @@ from validateArgs import parse_classes, check_folder_contents
 
 def main():
     usage = """
-If you're using command line arguments, see usage below.
 USAGE: python redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
 
 Description:
