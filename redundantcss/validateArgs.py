@@ -1,4 +1,3 @@
-
 from bs4 import BeautifulSoup
 
 def parse_classes(html_sheet):
