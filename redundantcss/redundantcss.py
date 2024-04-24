@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 import os
 
-from validateArgs import parse_classes, check_folder_contents
+from redundantcss.validateArgs import parse_classes, check_folder_contents
 
 def main():
     usage = """

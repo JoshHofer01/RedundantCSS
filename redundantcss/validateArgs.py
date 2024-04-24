@@ -1,6 +1,5 @@
 
 from bs4 import BeautifulSoup
-from pathlib import Path
 
 def parse_classes(html_sheet):
     classes = set()
