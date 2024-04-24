@@ -18,11 +18,11 @@ This script analyzes a stylesheet and identifies redundant CSS classes not used 
 <hr>
 
 ## **Usage:**
-    python3 redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
+    redundantcss 'stylesheet_path' 'template_path_or_template_paths'
 
 or
 
-    python redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
+    redundantcss 'stylesheet_path' 'template_path_or_template_paths'
 
 Arguments:
   - 'stylesheet_path': Path to the CSS stylesheet to be analyzed.
