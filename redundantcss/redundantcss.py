@@ -3,11 +3,10 @@ import sys
 from pathlib import Path
 import os
 
-from validateArgs import parse_classes, check_folder_contents
+from redundantcss.validateArgs import parse_classes, check_folder_contents
 
 def main():
-    usage = """
-USAGE: python redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
+    usage = """USAGE: python redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
 
 Description:
   This script analyzes a stylesheet and identifies redundant CSS rules not used by the templates provided.
@@ -33,7 +32,7 @@ Examples:
     elif len(sys.argv) == 3: 
         # Check if filepath for 2nd arg exists
         if not os.path.exists(sys.argv[2]):
-            print("Your folder or filepath does not exist, use argument --usage if unsure about usage.")
+            print("Your folder or filepath does not exist, run 'redundantcss' on its own for usage.")
             sys.exit()
         template_info = sys.argv[2]
 
@@ -50,7 +49,7 @@ Examples:
                 sys.exit()
 
     if not os.path.exists(sys.argv[1]):
-        print("Stylesheet path does not exist")
+        print("Stylesheet path does not exist, run 'redundantcss' on its own for usage.")
         sys.exit()
     stylesheet_path = sys.argv[1]
 
@@ -103,13 +102,6 @@ def get_html_classes(path):
                     classes_used.update(parse_classes(html_sheet)) 
 
     return classes_used 
-    
-
-def detect_inline_styling():
-    # Dict containing file name & the lines where the inline styling is found
-    lines = {"HTML File Name" : [("Line 17", "Styling")],
-             "File 2" : [("Line 15", "Styling"), ("Line 3", "Styling")]}
-    return lines
 
 
 def compare_classes(css_classes: list, html_classes: list):
@@ -119,6 +111,7 @@ def compare_classes(css_classes: list, html_classes: list):
             unused_classes.append(item)
 
     return unused_classes
+
 
 if __name__ == "__main__":
     main()
