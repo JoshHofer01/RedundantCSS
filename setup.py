@@ -9,7 +9,6 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 
 VERSION = '0.0.3'
 DESCRIPTION = 'Identifies redundant CSS classes not used by the templates provided.'
-LONG_DESCRIPTION = ''
 
 # Setting up
 setup(
@@ -25,10 +24,10 @@ setup(
     install_requires=['beautifulsoup4'],
     keywords=['python', 'css', 'html', 'redundantcss', 'remove unused css'],
     classifiers=[
-        "Development Status :: 1 - Planning"
+        "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
-        "Natural Language :: English"
+        "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
@@ -38,4 +37,7 @@ setup(
         'redundantcss=redundantcss.redundantcss:main',
       ],
     },
+    project_urls={
+        "Source": "https://github.com/JoshHofer01/RedundantCSS",
+    }
 )
