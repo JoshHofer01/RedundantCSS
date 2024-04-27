@@ -3,6 +3,10 @@ import sys
 from pathlib import Path
 import os
 
+# Imports for programm to work while developing
+from validateArgs import parse_classes, check_folder_contents
+
+# Imports for PyPi package
 from redundantcss.validateArgs import parse_classes, check_folder_contents
 
 def main():
