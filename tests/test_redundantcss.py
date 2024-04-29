@@ -2,6 +2,22 @@ from redundantcss.redundantcss import get_html_classes, get_css_classes, compare
 from redundantcss.validateArgs import parse_classes, check_folder_contents
 
 
+# Global variables for file paths
+# Will be used in many tests
+
+# Exact path to single html file
+TEMPLATE_PATH = "template1.html"
+
+# Path to folder with multiple files, ONLY html files
+TEMPLATE_FOLDER = "templates/"
+
+# Folder with multiple file types including HTML and CSS
+MIXED_FOLDER = "mixed_files/"
+
+# Exact path to stylesheet
+STYLESHEET = "styles.css"
+
+# USES PYTEST
 def main():
     pass
 
@@ -9,7 +25,8 @@ def main():
 # --
 # Checks single '.html' file
 def test_single_template_file():
-    pass
+    with open(TEMPLATE_PATH, 'r') as file
+    assert get_html_classes(file) == ['center-title', 'song-dropdown', '
 
 
 # Checks multiple '.html' files passed as argument to 'get_html_classes()'
