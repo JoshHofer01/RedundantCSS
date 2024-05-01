@@ -1,0 +1,28 @@
+.page-container {
+    display: flex;
+    padding: 20px;
+}
+
+.bg-container {
+    height: 95svh;
+    display: flex;
+    flex-direction: column;
+    object-fit: cover;
+    background-size: cover;
+}
+
+.title-text {
+    display: flex;
+    padding-block: 15svh;
+    padding-inline: 15vw;
+    flex-direction: column;
+}
+
+.protest {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0px;
+}
+
+.unused-class {
+    display: flex;
+}
