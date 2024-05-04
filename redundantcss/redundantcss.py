@@ -2,34 +2,30 @@ import re
 import sys
 from pathlib import Path
 import os
+import argparse
 
-from redundantcss.validate_args import parse_classes, check_folder_contents
+from redundantcss.validate_args import parse_classes, check_folder_contents, create_flags
+from redundantcss.read_paths import CSSInfo, HTMLInfo
+from redundantcss.helpers import usage
 
 def main():
-    usage = """USAGE: python redundantcss.py 'stylesheet_path' 'template_path_or_template_paths'
+    arg_count = len(sys.argv)
+    parser = create_flags()
+    args: argparse.Namespace = parser.parse_args()
+    # TODO: Rewrite ie/elif/else statement to include custom values from argparse
+    # TODO: Remove reliability on sys for arg parsing
+    # TODO: Refactor EVERYTHING into functions, either in read_paths or validate_args
+    # * Clean up code in this file
+    # * File should ONLY contain if/elif/else statement
 
-Description:
-  This script analyzes a stylesheet and identifies redundant CSS rules not used by the templates provided.
-
-Arguments:
-  - 'stylesheet_path': Path to the CSS stylesheet to be analyzed.
-  - 'template_path_or_template_paths': Path to a folder containing HTML templates or paths to individual template files.
-
-Examples:
-  1. Analyze a single template:
-     python redundantcss.py 'styles.css' 'template.html'
-
-  2. Analyze multiple templates in a folder:
-     python redundantcss.py 'styles.css' 'templates/'
-
-  3. Analyze multiple templates provided as separate arguments:
-     python redundantcss.py 'styles.css' 'template1.html' 'template2.html' 'template3.html'"""
-    
-    if len(sys.argv) < 3:
-        print(usage)
+    if arg_count == 1:
+        print("This feature is not currently implemented")
         sys.exit()
 
-    elif len(sys.argv) == 3: 
+    elif arg_count == 2:
+        ...
+
+    elif arg_count == 3: 
         # Check if filepath for 2nd arg exists
         if not os.path.exists(sys.argv[2]):
             print("Your folder or filepath does not exist, run 'redundantcss' on its own for usage.")
@@ -37,7 +33,7 @@ Examples:
         template_info = sys.argv[2]
 
     # Multiple args accepts multiple html files instead of folder path. 
-    elif len(sys.argv) > 3:
+    elif arg_count > 3:
         template_info = sys.argv[2:]
         # Check each filepath for validity before continuing
         for file in template_info:

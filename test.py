@@ -1,34 +1,10 @@
-from bs4 import BeautifulSoup
 import argparse
 
-
-# PROBABLY REWRITE
-def parse_classes(html_sheet):
-    classes = set()
-    content = html_sheet.read()
-    soup = BeautifulSoup(content, 'html.parser')
-    elements_with_class = soup.find_all(class_=True)
-
-    for element in elements_with_class:
-        classes.update(element.get("class"))
-    
-    return classes
-
-# PROBABLY REWRITE
-def check_folder_contents(path):
-    html_count = 0
-    other_file_count = 0
-    for file_path in path.iterdir():
-        if str(file_path).endswith(".html"):
-            html_count += 1
-        else:
-            other_file_count += 1
-
-    if other_file_count >= 0 and html_count == 0:
-        return False
-    elif html_count > 0:
-        return True
-
+def main():
+    parser = create_flags()
+    args: argparse.Namespace = parser.parse_args()
+    if args.gethtml:
+        print(True)
 
 
 class GetHTMLPath(argparse.Action):
@@ -127,15 +103,6 @@ ids: gets name of all ids used within html files.\n
     
     return parser
 
-# PROBABLY REWRITE
-def validate_flag(user_flag, flags):
-    current_flag = "" # assert blank flag variable
-    for flag in flags:
-        if user_flag == flag['short_flag'] or user_flag == flag['long_flag']:
-            if not current_flag: # only continue if a flag has not already been filled
-                current_flag = flag['long_flag']
-            return False # if more than one flag has been used
-        return False # if flag does not match an accepted flag
-    return current_flag # if passes all validation
 
-
+if __name__ == "__main__":
+    main()
