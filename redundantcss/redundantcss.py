@@ -4,9 +4,10 @@ from pathlib import Path
 import os
 import argparse
 
-from redundantcss.validate_args import parse_classes, check_folder_contents, create_flags
+from redundantcss.validate_args import parse_classes, check_folder_contents, create_flags, is_css_file, is_html_file
 from redundantcss.read_paths import CSSInfo, HTMLInfo
 from redundantcss.helpers import usage
+
 
 def main():
     arg_count = len(sys.argv)
@@ -15,8 +16,65 @@ def main():
     # TODO: Rewrite ie/elif/else statement to include custom values from argparse
     # TODO: Remove reliability on sys for arg parsing
     # TODO: Refactor EVERYTHING into functions, either in read_paths or validate_args
+    # TODO: Vet .other_choices to ensure they are valid filetypes
     # * Clean up code in this file
     # * File should ONLY contain if/elif/else statement
+
+    # TODO
+    if args.getcss:  # checks for --getcss flag
+        # Assert dictionary that maps all --getcss choices to respective functions
+        css_arg_functions = {
+            "ids": CSSInfo.get_ids,
+            "classes_css": CSSInfo.get_classes,
+            "media": CSSInfo.get_media,
+            "element": CSSInfo.get_elements}
+
+        if args.other_choices:  # If user specifies path(s) to read
+            stylesheet_paths = []
+
+            for choice in args.other_choices:
+                # Validate that each choice is a '.css' file that exists
+                if not is_css_file(choice):
+                    print(f"{choice} is an invalid stylesheet path. Use 'redundantcss [-u or -h]' for help.")
+                    sys.exit()
+                else:
+                    stylesheet_paths.append(choice)
+
+            if not check_file_extensions():
+                print("Your files are not all CSS files. Use 'redundantcss [-u or -h]' for help.")
+        
+        else:   # TODO: Logic to look through entire directory for '.css' files
+           pass
+         
+        cssinfo = CSSInfo(stylesheet_paths)  # Create CSSInfo object if all conditions are valid/met.
+
+        for arg in args.getcss:  # loop to run the the function based on the users request
+            try:
+                result = css_arg_functions[arg]()
+            except:
+                print(f"ERROR: No function defined for argument {arg}")
+            
+            # TODO: Print result nicely
+            # Amount of items
+        
+    elif args.gethtml:  # checks for --gethtml flag
+        html_arg_functions = {
+            "ids": HTMLInfo.get_ids,
+            "classes_html": HTMLInfo.get_classes,
+            "inline": HTMLInfo.get_inline}
+        # Duplicate CSS info checks but convert to checks for HTML using HTML funcs
+        pass
+
+    else:  # if programm is run without arguments passed
+        if len(sys.argv) == 1:
+            # Create func for scanning directory for HTML and CSS files
+            pass
+        else:
+            print("Incorrect usage. Use 'redundantcss [-u or -h]' for help.")
+            sys.exit()
+
+        
+
 
     if arg_count == 1:
         print("This feature is not currently implemented")
@@ -61,9 +119,9 @@ def main():
 
 def get_css_classes(stylesheet: str):
     with open(stylesheet, 'r') as file:
-        content = file.readlines() # Read the contents of CSS file
+        content = file.readlines()  # Read the contents of CSS file
 
-    classes = [] # Create list that includes each CSS class
+    classes = []  # Create list that includes each CSS class
     for line in content:
         if line.startswith("."): # Find the classes created within the stylesheet
             # Remove class indicator and opening brackets
@@ -76,16 +134,11 @@ def get_css_classes(stylesheet: str):
 
 def get_html_classes(path):
     classes_used = set()
-    # If multiple template files are including in calling arguments.
-    if type(path) == list:
-        for item in path:
-            with open(item, 'r') as html_sheet:
-                classes_used.update(parse_classes(html_sheet))
-    # If only a single template argument is passed and is a template file.
-    elif path.endswith(".html"):
+    # If path passed is template file.
+    if path.endswith(".html"):
         with open(path, 'r') as html_sheet:
             classes_used.update(parse_classes(html_sheet))
-    # If only a single template argument is passed and is a folder path.
+    # If folder path is passed as path.
     else:
         folder_path = Path(path)
         if not check_folder_contents(folder_path):

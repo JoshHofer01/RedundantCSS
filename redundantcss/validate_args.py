@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import argparse
+import os
+from pathlib import Path
 
 
 # PROBABLY REWRITE
@@ -11,8 +13,9 @@ def parse_classes(html_sheet):
 
     for element in elements_with_class:
         classes.update(element.get("class"))
-    
+  
     return classes
+
 
 # PROBABLY REWRITE
 def check_folder_contents(path):
@@ -28,7 +31,6 @@ def check_folder_contents(path):
         return False
     elif html_count > 0:
         return True
-
 
 
 class GetHTMLPath(argparse.Action):
@@ -53,7 +55,7 @@ class GetHTMLPath(argparse.Action):
 
 class GetCSSPath(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        choices=["classes_css", "ids", "media", "element"]
+        choices = ["classes_css", "ids", "media", "element"]
         needed_choices = set()
         other_choices = set()
 
@@ -73,8 +75,8 @@ class GetCSSPath(argparse.Action):
 
 def create_flags():
     parser = argparse.ArgumentParser(
-        prog="redundantcss",
-        description="This script analyzes a stylesheets and templates, providing information regarding classes & styling used.",
+        prog = "redundantcss",
+        description = "This script analyzes a stylesheets and templates, providing information regarding classes & styling used.",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.usage = """Usage: redundantcss [-h | -u] [[--getcss [choices]] | [--gethtml [choices]] <stylesheet> <template_folder OR template_paths>
@@ -83,7 +85,7 @@ Use 'redundantcss -u | --usage' for detailed info info."""
     
     group = parser.add_mutually_exclusive_group()
 
-    group.add_argument('-u', '--usage', 
+    group.add_argument('-u', '--usage',
                        help="Details all ways to use programm, including flag usage.",
                        action='store_true')
     
@@ -127,15 +129,40 @@ ids: gets name of all ids used within html files.\n
     
     return parser
 
+
 # PROBABLY REWRITE
 def validate_flag(user_flag, flags):
-    current_flag = "" # assert blank flag variable
+    current_flag = ""  # assert blank flag variable
     for flag in flags:
         if user_flag == flag['short_flag'] or user_flag == flag['long_flag']:
-            if not current_flag: # only continue if a flag has not already been filled
+            if not current_flag:  # only continue if a flag has not already been filled
                 current_flag = flag['long_flag']
-            return False # if more than one flag has been used
-        return False # if flag does not match an accepted flag
-    return current_flag # if passes all validation
+            return False  # if more than one flag has been used
+        return False  # if flag does not match an accepted flag
+    return current_flag  # if passes all validation
 
 
+def is_css_file(file_path: Path):
+    if not file_path.exists():
+        return False
+    
+    try:
+        if not str(file_path).endswith(".css"):
+            return False
+    except TypeError:
+        return False
+    
+    return True
+
+
+def is_html_file(file_path):
+    if not os.path.exists(file_path):
+        return False
+    
+    try:
+        if not str(file_path).endswith(".html"):
+            return False
+    except TypeError:
+        return False
+    
+    return True

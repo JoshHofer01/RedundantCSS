@@ -1,10 +1,10 @@
 import argparse
+import sys
 
 def main():
+    print(len(sys.argv))
     parser = create_flags()
     args: argparse.Namespace = parser.parse_args()
-    if args.gethtml:
-        print(True)
 
 
 class GetHTMLPath(argparse.Action):
