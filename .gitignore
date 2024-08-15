@@ -1,1 +1,3 @@
 .venv/
+redundantcss/__pycache__/
+*.pyc
