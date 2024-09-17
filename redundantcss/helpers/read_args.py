@@ -1,11 +1,10 @@
 import re
 from bs4 import BeautifulSoup
-import sys
 
 try:
-    from helpers.validate_paths import clean_filepath_name
-except ModuleNotFoundError:
     from redundantcss.helpers.validate_paths import clean_filepath_name
+except ModuleNotFoundError:
+    from helpers.validate_paths import clean_filepath_name
 
 def main():
     pass

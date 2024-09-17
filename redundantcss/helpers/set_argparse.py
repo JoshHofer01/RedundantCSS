@@ -1,5 +1,8 @@
 import argparse
-from helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
+try:
+    from redundantcss.helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
+except ModuleNotFoundError:
+    from helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
 
 
 def main():

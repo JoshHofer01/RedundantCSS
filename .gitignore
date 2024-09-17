@@ -1,4 +1,6 @@
 .venv/
-redundantcss/__pycache__/
-*.pyc
+*__pycache__/
 .pytest_cache
+*.pyc
+build/
+*.egg-info/

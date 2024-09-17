@@ -1,17 +1,29 @@
 import sys
 import argparse
 
-# 
+# Program ran as a package needs absolute filepath for imports
+# try/except block works to allow program to run as a package and ran from
+# terminal using 'python3 redundantcss/redundantcss.py' as a developer
 try:
-    from helpers import compare, beautify
-    from helpers.set_argparse import create_flags
-    from helpers.read_args import CSSInfo, HTMLInfo
-    from helpers.usage import usage
-except ModuleNotFoundError:
     from redundantcss.helpers import compare, beautify
+except ModuleNotFoundError:
+    from helpers import compare, beautify
+
+try:
     from redundantcss.helpers.set_argparse import create_flags
+except ModuleNotFoundError:
+    from helpers.set_argparse import create_flags
+
+try:
     from redundantcss.helpers.read_args import CSSInfo, HTMLInfo
+except ModuleNotFoundError:
+    from helpers.read_args import CSSInfo, HTMLInfo
+
+try:
     from redundantcss.helpers.usage import usage
+except ModuleNotFoundError:
+    from helpers.usage import usage
+# This solution is not ideal, but it works.
 
 
 def main():
