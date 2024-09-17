@@ -1,83 +1,136 @@
-import pytest
-from redundantcss import redundantcss
 from pathlib import Path
 
-# Global variables for file paths
-# Will be used in many tests
+# Modules to test from
+import redundantcss.helpers.validate_paths as validate_paths
+import redundantcss.helpers.compare as compare
+import redundantcss.helpers.read_args as read_args
+
 
 # USES PYTEST
 # set paths as global variables
-TEMPLATE_PATH = "tests/template1.html"  # Exact path to single html file
-MULTI_PATH = ["tests/template1.html", "tests/templates/_layout.html"]  # Paths to multiple HTML files
-TEMPLATES_FOLDER_PATH = "tests/templates"  # Path to folder with multiple files, ONLY html files
-STYLESHEET_PATH = "tests/styles.css"  # Exact path to stylesheet
-
-# validate_args.py function check_folder_contents(path) uses
-# Path object from pathlib library. Iterates over each .html
-# file within directory.
-FOLDER_WITH_HTML = Path("tests/mixed_with_html")  # Folder with multiple file types, NOT including HTML files
-FOLDER_WITHOUT_HTML = Path("tests/mixed_without_html")  # Folder with multiple file types, NOT including HTML files
+VALID_CSS = "tests/styles.css" 
+INVALID_CSS = "stylesheet.css"
+VALID_HTML = "tests/template1.html"
+INVALID_HTML = "html_document.html"
+FOLDER_ONLY_HTML = "tests/templates"  # Path to folder with ONLY html files
+FOLDER_WITH_HTML = "tests/mixed_with_html"  # Folder with multiple file types including HTML files
+FOLDER_WITHOUT_HTML = "tests/mixed_without_html"  # Folder with multiple file types NOT including HTML files
 
 def main():
-    test_single_template_files()
-    test_parses_templates_folder()
-    test_parses_stylesheet()
-    test_class_comparison()
+    pass
 
 
-# Tests for redundantcss.py
-# --
-# Checks for single or multiple '.html' files passed as arguments.
-def test_single_template_files():
-    assert redundantcss.get_html_classes(TEMPLATE_PATH) == {
-        'bg-container', 'green-text', 'protest'
-        }
+# Tests for  validate_paths.py
+def test_css_validity():
+    assert validate_paths.is_css_file(VALID_CSS) == True
+    assert validate_paths.is_css_file(INVALID_CSS) == False
+
+
+def test_html_validity():
+    assert validate_paths.is_html_file(VALID_HTML) == True
+    assert validate_paths.is_html_file(INVALID_HTML) == False
+
+
+def test_html_folders():
+    folder_only_html_paths = ['tests/templates/template4.html', 'tests/templates/_layout.html']
+    folder_with_html_paths = ['tests/mixed_with_html/template3.html', 'tests/mixed_with_html/template2.html']
+    assert validate_paths.retrieve_html_paths(FOLDER_ONLY_HTML) == folder_only_html_paths
+    assert validate_paths.retrieve_html_paths(FOLDER_WITH_HTML) == folder_with_html_paths
+    assert validate_paths.retrieve_html_paths(FOLDER_WITHOUT_HTML) == []
+
+
+def test_filepath_name_cleaning():
+    assert validate_paths.clean_filepath_name(VALID_HTML) == "template1.html"
+    assert validate_paths.clean_filepath_name(FOLDER_WITH_HTML) == "mixed_with_html"
+
+
+# Tests for read_args.py
+def test_cssinfo():
+    cssobject = read_args.CSSInfo("tests/styles.css")
+    classes = ['page-container', 'bg-container', 'title-text', 'protest', 'unused-class']
+    ids = ['id-selector1', 'id-selector2']
+    media = ['media screen and (max-width: 666px)']
+    elements = ['html']
+
+
+    assert cssobject.get_classes() == classes
+    assert cssobject.get_ids() == ids
+    assert cssobject.get_media() == media
+    assert cssobject.get_elements() == elements
+
+
+def test_all_cssinfo():
+    cssobject = read_args.CSSInfo("tests/styles.css")
+    css_info = {'classes' : ['page-container', 'bg-container', 'title-text', 'protest', 'unused-class'],
+                'ids' : ['id-selector1', 'id-selector2'],
+                'media' : ['media screen and (max-width: 666px)'], 
+                'elements' : ['html']}
+
+    assert cssobject.all() == css_info
     
-    assert redundantcss.get_html_classes(MULTI_PATH) == {
-        'bg-container', 'green-text', 'protest', 'page-container'
-        }
 
 
-# Make sure a folder name passed as argument to function parses correctly and
-# each '.html' file in the folder is read.
-def test_parses_templates_folder():
-    assert redundantcss.get_html_classes(TEMPLATES_FOLDER_PATH) == {
-        'bg-container', 'green-text', 'protest', 'page-container'
-        }
+def test_htmlinfo():
+    htmlobject = read_args.HTMLInfo("tests/template1.html")
+    classes = ['green-text', 'bg-container', 'protest']
+    ids = ['bigTextBox', 'testForDupe']
+    inline_styling = ['padding: 5px;']
+
+    for each_class in classes:
+        assert each_class in htmlobject.get_classes()
+
+    for each_id in ids:
+        assert each_id in htmlobject.get_ids()
+
+    for each_style in inline_styling:
+        assert each_style in htmlobject.get_inline()
 
 
-# Ensure the function is returning all of the classes created
-# in the 'styles.css' or stylesheet given to 'get_css_classes()'.
-def test_parses_stylesheet():
-    assert redundantcss.get_css_classes(STYLESHEET_PATH) == ['page-container', 'bg-container', 'title-text', 'protest', 'unused-class']
+def test_all_htmlinfo():
+    htmlobject = read_args.HTMLInfo("tests/template1.html")
+    html_info = {'class': {'green-text', 'bg-container', 'protest'}, 
+                 'id': {'bigTextBox', 'testForDupe'}, 
+                 'style': {'padding: 5px;'}}
+
+    html_output = htmlobject.all()
+
+    for selector in html_info:
+        for value in list(html_info[selector]):
+            assert value in list(html_output[selector])
 
 
-def test_class_comparison():
-    css_classes = ['page-container', 'bg-container', 'title-text', 'protest', 'unused-class']
-    html_classes = ['page-container', 'bg-container', 'title-text', 'protest']
-    assert redundantcss.compare_classes(css_classes, html_classes) == ["unused-class"]
+# Tests for compare.py
+def test_valid_comparisons():
+    css_classes = ['1', '2', '3', 'unused']
+    html_classes = ['1', '2', '3']
+    
+    assert compare.compare_classes(css_classes, html_classes) == ['unused']
 
 
-# Create tests for validateArgs.py
-# Tests for validate_args.py
-# --
-# Tests function used within get_html_classes().
-def test_parse_classes():
-    # This function can only accept 1 html sheet at a time.
-    # Error handling is done by parent function
-    # Error handling being added to this function at a later stage
-    with open(TEMPLATE_PATH, 'r') as html_sheet:
-        assert redundantcss.parse_classes(html_sheet) == {
-        'bg-container', 'green-text', 'protest'
-        }
+def test_invalid_comparisons():
+    css_classes1 = []
+    css_classes2 = ['1', '2', '3', 'unused']
+    html_classes1 = ['1', '2', '3']
+    html_classes2 = []
+    
+    assert compare.compare_classes(css_classes1, html_classes1) == []
+    assert compare.compare_classes(css_classes2, html_classes2) == ['1', '2', '3', 'unused']
 
 
-def test_no_html_folder():
-    assert redundantcss.check_folder_contents(FOLDER_WITHOUT_HTML) == False
+def test_html_object_merging():
+    htmlobject1 = read_args.HTMLInfo("tests/template1.html")
+    htmlobject2 = read_args.HTMLInfo("tests/mixed_with_html/template2.html")
 
+    expected_output = {'class': {'protest', 'bg-container', 'green-text'}, 
+              'id': {'bigTextBox', 'testForDupe'}, 
+              'style': {'padding: 5px;'}}
+    merged_output = compare.merge_html_objects([htmlobject1, htmlobject2])
 
-def test_mixed_folder():
-    assert redundantcss.check_folder_contents(FOLDER_WITH_HTML) == True
+    # Convert each set into a list to check if the value is present in merged list
+    for selector in expected_output:
+        for value in list(expected_output[selector]):
+            assert value in list(merged_output[selector])
+
 
 
 if __name__ == "__main__":

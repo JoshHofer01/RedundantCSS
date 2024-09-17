@@ -1,166 +1,122 @@
-import re
 import sys
-from pathlib import Path
-import os
 import argparse
 
-from redundantcss.validate_args import parse_classes, check_folder_contents, create_flags, is_css_file, is_html_file
-from redundantcss.read_paths import CSSInfo, HTMLInfo
-from redundantcss.helpers import usage
+# 
+try:
+    from helpers import compare, beautify
+    from helpers.set_argparse import create_flags
+    from helpers.read_args import CSSInfo, HTMLInfo
+    from helpers.usage import usage
+except ModuleNotFoundError:
+    from redundantcss.helpers import compare, beautify
+    from redundantcss.helpers.set_argparse import create_flags
+    from redundantcss.helpers.read_args import CSSInfo, HTMLInfo
+    from redundantcss.helpers.usage import usage
 
 
 def main():
     arg_count = len(sys.argv)
     parser = create_flags()
     args: argparse.Namespace = parser.parse_args()
-    # TODO: Rewrite ie/elif/else statement to include custom values from argparse
-    # TODO: Remove reliability on sys for arg parsing
-    # TODO: Refactor EVERYTHING into functions, either in read_paths or validate_args
-    # TODO: Vet .other_choices to ensure they are valid filetypes
-    # * Clean up code in this file
-    # * File should ONLY contain if/elif/else statement
 
-    # TODO
-    if args.getcss:  # checks for --getcss flag
-        # Assert dictionary that maps all --getcss choices to respective functions
-        css_arg_functions = {
-            "ids": CSSInfo.get_ids,
-            "classes_css": CSSInfo.get_classes,
-            "media": CSSInfo.get_media,
-            "element": CSSInfo.get_elements}
+    # Gives user a different detailed help guide on how to use programm
+    if args.usage:
+        print(usage)
 
-        if args.other_choices:  # If user specifies path(s) to read
-            stylesheet_paths = []
+    # Compares all selectors in given stylesheet to the provided HTML templates
+    # Will tell user which selectors from stylesheet are not being used
+    elif args.compare:
+        stylesheet_path: str = args.paths[0]
+        html_paths: list = args.paths[1:]
 
-            for choice in args.other_choices:
-                # Validate that each choice is a '.css' file that exists
-                if not is_css_file(choice):
-                    print(f"{choice} is an invalid stylesheet path. Use 'redundantcss [-u or -h]' for help.")
-                    sys.exit()
-                else:
-                    stylesheet_paths.append(choice)
+        print(f"\nScanning '{stylesheet_path}'")
+        cssinfo = CSSInfo(stylesheet_path)
+        css_classes: list = cssinfo.get_classes()
 
-            if not check_file_extensions():
-                print("Your files are not all CSS files. Use 'redundantcss [-u or -h]' for help.")
+        html_classes = set()
+        for html_path in html_paths:
+            print(f"Scanning '{html_path}'")
+            htmlinfo = HTMLInfo(html_path).get_classes()
+            for html_class in htmlinfo:
+                html_classes.add(html_class)
+        print("")
         
-        else:   # TODO: Logic to look through entire directory for '.css' files
-           pass
-         
-        cssinfo = CSSInfo(stylesheet_paths)  # Create CSSInfo object if all conditions are valid/met.
+        unused_classes: list = compare.compare_classes(css_classes, list(html_classes))
+        beautify.comparisons(unused_classes, class_count=len(css_classes))
 
-        for arg in args.getcss:  # loop to run the the function based on the users request
+    # Scans entire stylesheet for selectors
+    # User specifies which selector type they want to view
+    elif args.getcss:
+        cssinfo = CSSInfo(args.stylesheet_path)
+        print(f"\n↓↓↓ Scanning '{cssinfo.clean_path}' ↓↓↓")
+
+        # Assert dictionary that maps all --getcss choices to respective functions
+        # These will later get called if key has been passed to program
+        css_arg_functions = {
+            "ids": cssinfo.get_ids,
+            "classes_css": cssinfo.get_classes,
+            "media": cssinfo.get_media,
+            "element": cssinfo.get_elements,
+            "all" : cssinfo.all}
+        
+        # Loop to call each function in CSSInfo based on 'choices' that were previously passed
+        for arg in args.getcss:
             try:
                 result = css_arg_functions[arg]()
             except:
                 print(f"ERROR: No function defined for argument {arg}")
-            
-            # TODO: Print result nicely
-            # Amount of items
-        
-    elif args.gethtml:  # checks for --gethtml flag
-        html_arg_functions = {
-            "ids": HTMLInfo.get_ids,
-            "classes_html": HTMLInfo.get_classes,
-            "inline": HTMLInfo.get_inline}
-        # Duplicate CSS info checks but convert to checks for HTML using HTML funcs
-        pass
 
+            beautify.css(result, arg) # See 'beautify_css' for docstring         
+
+    # Scans all provided HTML docs, or provided folders for HTML docs.
+    # User specifies which style types they want information on.
+    # This will print out the sheet, selector name, and line number selector is found on.
+    elif args.gethtml:  # checks for --gethtml flag.
+        html_paths: list = args.paths
+
+        # Create HTMLInfo object for each path after all conditions are valid/met.
+        html_objects = []
+        for html_path in html_paths:
+            htmlinfo = HTMLInfo(html_path)
+            html_objects.append(htmlinfo)
+
+
+        for arg in args.gethtml: # Iterate over each argument given to argparse.
+            if arg == "all":
+                merged_html_info: dict = compare.merge_html_objects(html_objects)
+                beautify.html(merged_html_info, arg)
+            else:
+                for object in html_objects: # Iterate over each HTMLInfo object created.
+                    # Assert the functions attached to specific arguments
+                    html_arg_functions = {
+                        "classes_html" : object.get_classes,
+                        "ids" : object.get_ids,
+                        "inline" : object.get_inline,
+                        "all" : object.all}
+                    # Call the correct method on each object based on current outer loop argument.
+                    try:
+                        result = html_arg_functions[arg]()
+                    # If program reaches exception, something went very wrong somewhere
+                    except KeyError:
+                        print(f"ERROR: No function defined for argument {arg}")
+                        sys.exit() 
+                    
+                    print(f"\n↓↓↓ Scanning '{object.clean_path}' ↓↓↓")  # Update user
+                    beautify.html(result, arg) # Pass results and arg type to beautify_html to print results
+
+    # UPCOMING VERSION
+    # Will scan entire directory for stylesheet and ALL HTML docs.
+    # Automatically run --compare on files found.
     else:  # if programm is run without arguments passed
-        if len(sys.argv) == 1:
+        if arg_count == 1:
             # Create func for scanning directory for HTML and CSS files
-            pass
+            print("FEATURE COMING SOON")
+            print("Use 'redundantcss [-u or -h]' for help.")
         else:
             print("Incorrect usage. Use 'redundantcss [-u or -h]' for help.")
             sys.exit()
 
-        
-
-
-    if arg_count == 1:
-        print("This feature is not currently implemented")
-        sys.exit()
-
-    elif arg_count == 2:
-        ...
-
-    elif arg_count == 3: 
-        # Check if filepath for 2nd arg exists
-        if not os.path.exists(sys.argv[2]):
-            print("Your folder or filepath does not exist, run 'redundantcss' on its own for usage.")
-            sys.exit()
-        template_info = sys.argv[2]
-
-    # Multiple args accepts multiple html files instead of folder path. 
-    elif arg_count > 3:
-        template_info = sys.argv[2:]
-        # Check each filepath for validity before continuing
-        for file in template_info:
-            if not file.endswith(".html"):
-                print(f"Error with '{file}', please end filename with '.html' and ensure it exists.")
-                sys.exit()
-            if not os.path.exists(file):
-                print(f"'{file}' does not exist, please ensure this is the correct path and try again.")
-                sys.exit()
-
-    if not os.path.exists(sys.argv[1]):
-        print("Stylesheet path does not exist, run 'redundantcss' on its own for usage.")
-        sys.exit()
-    stylesheet_path = sys.argv[1]
-
-    css_classes: list = get_css_classes(stylesheet_path)
-    html_classes: set = get_html_classes(template_info)
-    unused_classes: list = compare_classes(css_classes, html_classes)
-
-    print(f"You have {len(unused_classes)} unused classes out of {len(css_classes)}.")
-    print(f"All unused CSS classes:")
-    for item in unused_classes:
-        print(item)
-
-
-def get_css_classes(stylesheet: str):
-    with open(stylesheet, 'r') as file:
-        content = file.readlines()  # Read the contents of CSS file
-
-    classes = []  # Create list that includes each CSS class
-    for line in content:
-        if line.startswith("."): # Find the classes created within the stylesheet
-            # Remove class indicator and opening brackets
-            css_class = line.strip().lstrip(".").rstrip(" {")
-            if not re.search(r"^.*(\s|:)+.*$", css_class):
-                classes.append(css_class)
-
-    return classes
-
-
-def get_html_classes(path):
-    classes_used = set()
-    # If path passed is template file.
-    if path.endswith(".html"):
-        with open(path, 'r') as html_sheet:
-            classes_used.update(parse_classes(html_sheet))
-    # If folder path is passed as path.
-    else:
-        folder_path = Path(path)
-        if not check_folder_contents(folder_path):
-            print("There are no HTML files in this folder")
-            sys.exit()
-
-        for file_path in folder_path.iterdir():
-            if file_path.is_file() and str(file_path).endswith(".html"):
-                with open(file_path, 'r') as html_sheet:
-                    classes_used.update(parse_classes(html_sheet)) 
-
-    return classes_used 
-
-
-def compare_classes(css_classes: list, html_classes: list):
-    unused_classes = []
-    for item in css_classes:
-        if item not in html_classes:
-            unused_classes.append(item)
-
-    return unused_classes
-
 
 if __name__ == "__main__":
     main()
+

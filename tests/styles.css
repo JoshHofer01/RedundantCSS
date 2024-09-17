@@ -26,3 +26,32 @@
 .unused-class {
     display: flex;
 }
+
+
+#id-selector1 {
+    font-size: x-large;
+}
+
+#id-selector2 {
+    font-size: x-large;
+}
+
+
+@media screen and (max-width: 666px) {
+    .page-container {
+        font-size: 50px;
+        line-height: 45px;
+    }
+    .bg-container {
+        font-size: 20px;
+        line-height: 23px;
+    }
+    #id-selector1 {
+        width: 300px;
+    }
+}
+
+
+html {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}

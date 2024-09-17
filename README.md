@@ -1,45 +1,61 @@
 # RedundantCSS
-##### Current Version: V0.0.3
+##### Current Version: Pre-release V0.0.4
+##### CURRENTLY UNRELEASED ON PYPI
 
 ### **Contents:**
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Arguments](#keyword-arguments--choices)
+- [Examples](#usages)
 
 ## **Description:**
-This script analyzes a stylesheet and identifies redundant CSS classes not used by the templates provided. The script prints the names of all unused classes to the terminal, at which point you can go to the stylesheet and delete unused classes.
-<br>
-Currently this package only detects unused classes, [more features](#coming-soon) are on the way!
+This command line program analyzes CSS & HTML files based on the arguments you run redundantcss with. See below for usage info, and keyword argument info. RedundantCSS makes tracking selectors and styles easier for web developers.
 
 ## **Installation:**
     pip install redundantcss
 
-## **Usage:**
-    redundantcss 'stylesheet_path' 'template_path_or_template_paths'
+## **Usages:**
+    redundantcss [-h / --help | -u / --usage]
+    redundantcss --compare 'stylesheet_path' 'html_folder_path'
+    redundantcss --getcss [choices] 'stylesheet_path'
+    redundantcss --gethtml [choices] 'html_file_path' | 'html_folder_path'
 
-Arguments:
+<hr>
+
+###  **Keyword Arguments & Choices:**
+**'--compare':**  Compare will retrieve all class selectors from CSS stylesheet, and scan the provided HTML files to let you know which selectors are not being used in your HTML code.
+
+**'--getcss':** Scans the stylesheet path you provide for information, which you can select with one, or more, of the required selectors.
+  - classes_css: Provides table with all classes, and class count, found in stylesheet.
+  - ids: Provides table with all id selectors created in stylesheet
+  - media: Provides table with all media queries found in stylesheet
+  - elements: Provides table will all examples of element styling found in styleshet.
+  - all: Provides a table of all above information
+
+**'--gethtml':** Scans the folder or HTML path you provide for information, which you can select with one, or more, of the required selectors.
+  - classes_html: Provides table with all classes, and class count, used in HTML files.
+  - ids: Provides table will all id's used in HTML files.
+  - inline: Provides table with all instances of inline styling found in HTML files.
+  - all: Provides a table of all above information.
+
+**No arguments:** FEATURE COMING SOON *(This will scan your entire working directory from the root folder for all instances of CSS and HTML files, where you are able to  view information based on choices you have selected.)*
+
+
+
+### **Path Arguments**:
   - 'stylesheet_path': Path to the CSS stylesheet to be analyzed.
     - If your styles.css sheet is within another folder, please specify this folder first, eg *static/styles.css*.
   - 'template_path_or_template_paths': Path to a folder containing HTML templates or paths to individual template files.
 
-Examples:
-  1. Analyze a single template:
-     python redundantcss.py 'styles.css' 'template.html'
+<hr> 
+
+####  Examples:
+  1. Analyze a single HTML template for classes and ids:
+     redundantcss --gethtml classes_html ids template1.html
 
   2. Analyze multiple templates in a folder:
-     python redundantcss.py 'styles.css' 'templates/'
+     redundantcss --gethtml all html_folder/
 
-  3. Analyze multiple templates provided as separate arguments:
-     python redundantcss.py 'styles.css' 'template1.html' 'template2.html' 'template3.html'
-
-<hr>
-
-## **COMING SOON:** 
-- Use argparse for specific arguments, eg --usage, --dil, --rc
-- Give option to rewrite CSS file without redundant classes.
-- Create detect_inline_styling(). Dict with value being list of tuples.
-- Refactor functions and create more specific functions for current actions.
-- Provide clear documentation.
-- Detect media queries, id styles, and element styles.
-- Allow user to pass just the folder name containing .css file.
-- Parameterize ‘.html’ stuff.
+  3. Checking for unused CSS classes in HTML files
+     redundantcss --compare styles.css html_folder/

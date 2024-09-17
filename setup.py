@@ -8,7 +8,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
 VERSION = '0.0.3'
-DESCRIPTION = 'Identifies redundant CSS classes not used by the templates provided.'
+DESCRIPTION = 'Provides HTML & CSS information based on keyword arguments and filepaths, including styling, unused classes, and other relevant data.'
 
 # Setting up
 setup(
@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['beautifulsoup4'],
+    install_requires=['beautifulsoup4', 'tabulate'],
     keywords=['python', 'css', 'html', 'redundantcss', 'remove unused css'],
     classifiers=[
         "Development Status :: 1 - Planning",
@@ -34,7 +34,7 @@ setup(
     ],
     entry_points={
       'console_scripts': [
-        'redundantcss=redundantcss.redundantcss:main',
+        'redundantcss=redundantcss',
       ],
     },
     project_urls={
