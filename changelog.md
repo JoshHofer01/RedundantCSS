@@ -1,14 +1,16 @@
 # StyleMapper changelog
 ### Wednesday 18th September 2024
-Pre-release Version 0.1.0
-"StyleMapper"
+Beta Version 1.0.2 - "Small Changes"
+1. Removed small bug where folder paths would print onto the terminal during '--compare'
+2. Updated documentation accordingly with first full release onto PyPi.
+
+Beta Version 1.0.0 - "StyleMapper"
 
 1. Renamed program to StyleMapper to better align with what the program does, and will do in the future
 2. Fixed recursive function in `validate_paths.py` to return correct list of all HTML files in a folder.
 
 ### Tuesday 17th September 2024
-Pre-release Version 0.0.4
-"Refactoring RedundantCSS"
+Pre-release Version 0.0.4 - "Refactoring RedundantCSS"
 
 1. Major refactor of code into dedicated functions and classes
     - Main body of `redundantcss.py` is now 1 if/elif/else statement

@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '1.0.0'
+VERSION = '1.0.2'
 DESCRIPTION = 'Provides HTML & CSS information based on keyword arguments and filepaths, including styling, unused classes, and other relevant data.'
 
 # Setting up
@@ -24,7 +24,7 @@ setup(
     install_requires=['beautifulsoup4', 'tabulate'],
     keywords=['python', 'css', 'html', 'front-end', 'remove unused css'],
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Natural Language :: English",

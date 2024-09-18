@@ -1,6 +1,5 @@
 # StyleMapper
-##### Current Version: Pre-release V0.0.4
-##### CURRENTLY UNRELEASED ON PYPI
+##### Current Version: Beta 1.0.1 [(View project on PyPi)](https://pypi.org/project/stylemapper/)
 
 ### **Contents:**
 - [Description](#description)
