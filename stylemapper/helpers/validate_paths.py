@@ -49,9 +49,11 @@ def retrieve_html_paths(folder_path, max_dives=3, current_dive=0):
             if is_html_file(file_path): # If it's an HTML file, append its path to the list
                 html_files.append(file_path)
             elif file_path.is_dir(): # If it's a directory, recurse into it
-                html_files.extend(retrieve_html_paths(path, max_dives, current_dive + 1))
+                html_files.extend(retrieve_html_paths(file_path, max_dives, current_dive + 1))
     except FileNotFoundError:
         sys.exit(f"'{folder_path}' is not a valid folder. Please try again")
+
+    print(html_files)
         
 
     # Convert all 'path' objects into strings.

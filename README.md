@@ -1,4 +1,4 @@
-# RedundantCSS
+# StyleMapper
 ##### Current Version: Pre-release V0.0.4
 ##### CURRENTLY UNRELEASED ON PYPI
 
@@ -10,16 +10,16 @@
 - [Examples](#usages)
 
 ## **Description:**
-This command line program analyzes CSS & HTML files based on the arguments you run redundantcss with. See below for usage info, and keyword argument info. RedundantCSS makes tracking selectors and styles easier for web developers.
+This command line program analyzes CSS & HTML files based on the arguments you run stylemapper with. See below for usage info, and keyword argument info. StyleMapper makes tracking selectors and styles easier for web developers.
 
 ## **Installation:**
-    pip install redundantcss
+    pip install stylemapper
 
 ## **Usages:**
-    redundantcss [-h / --help | -u / --usage]
-    redundantcss --compare 'stylesheet_path' 'html_folder_path'
-    redundantcss --getcss [choices] 'stylesheet_path'
-    redundantcss --gethtml [choices] 'html_file_path' | 'html_folder_path'
+    stylemapper [-h / --help | -u / --usage]
+    stylemapper --compare 'stylesheet_path' 'html_folder_path'
+    stylemapper --getcss [choices] 'stylesheet_path'
+    stylemapper --gethtml [choices] 'html_file_path' | 'html_folder_path'
 
 <hr>
 
@@ -52,10 +52,10 @@ This command line program analyzes CSS & HTML files based on the arguments you r
 
 ####  Examples:
   1. Analyze a single HTML template for classes and ids:
-     redundantcss --gethtml classes_html ids template1.html
+     stylemapper --gethtml classes_html ids template1.html
 
   2. Analyze multiple templates in a folder:
-     redundantcss --gethtml all html_folder/
+     stylemapper --gethtml all html_folder/
 
   3. Checking for unused CSS classes in HTML files
-     redundantcss --compare styles.css html_folder/
+     stylemapper --compare styles.css html_folder/

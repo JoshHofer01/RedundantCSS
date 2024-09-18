@@ -1,9 +1,9 @@
 from pathlib import Path
 
 # Modules to test from
-import redundantcss.helpers.validate_paths as validate_paths
-import redundantcss.helpers.compare as compare
-import redundantcss.helpers.read_args as read_args
+import stylemapper.helpers.validate_paths as validate_paths
+import stylemapper.helpers.compare as compare
+import stylemapper.helpers.read_args as read_args
 
 
 # USES PYTEST

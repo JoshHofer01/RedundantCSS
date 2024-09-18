@@ -1,4 +1,11 @@
-# RedundantCSS changelog
+# StyleMapper changelog
+### Wednesday 18th September 2024
+Pre-release Version 0.1.0
+"StyleMapper"
+
+1. Renamed program to StyleMapper to better align with what the program does, and will do in the future
+2. Fixed recursive function in `validate_paths.py` to return correct list of all HTML files in a folder.
+
 ### Tuesday 17th September 2024
 Pre-release Version 0.0.4
 "Refactoring RedundantCSS"

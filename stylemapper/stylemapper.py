@@ -3,24 +3,24 @@ import argparse
 
 # Program ran as a package needs absolute filepath for imports
 # try/except block works to allow program to run as a package and ran from
-# terminal using 'python3 redundantcss/redundantcss.py' as a developer
+# terminal using 'python3 stylemapper/stylemapper.py' as a developer
 try:
-    from redundantcss.helpers import compare, beautify
+    from stylemapper.helpers import compare, beautify
 except ModuleNotFoundError:
     from helpers import compare, beautify
 
 try:
-    from redundantcss.helpers.set_argparse import create_flags
+    from stylemapper.helpers.set_argparse import create_flags
 except ModuleNotFoundError:
     from helpers.set_argparse import create_flags
 
 try:
-    from redundantcss.helpers.read_args import CSSInfo, HTMLInfo
+    from stylemapper.helpers.read_args import CSSInfo, HTMLInfo
 except ModuleNotFoundError:
     from helpers.read_args import CSSInfo, HTMLInfo
 
 try:
-    from redundantcss.helpers.usage import usage
+    from stylemapper.helpers.usage import usage
 except ModuleNotFoundError:
     from helpers.usage import usage
 # This solution is not ideal, but it works.
@@ -123,9 +123,9 @@ def main():
         if arg_count == 1:
             # Create func for scanning directory for HTML and CSS files
             print("FEATURE COMING SOON")
-            print("Use 'redundantcss [-u or -h]' for help.")
+            print("Use 'stylemapper [-u or -h]' for help.")
         else:
-            print("Incorrect usage. Use 'redundantcss [-u or -h]' for help.")
+            print("Incorrect usage. Use 'stylemapper [-u or -h]' for help.")
             sys.exit()
 
 

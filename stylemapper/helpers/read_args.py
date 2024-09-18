@@ -2,7 +2,7 @@ import re
 from bs4 import BeautifulSoup
 
 try:
-    from redundantcss.helpers.validate_paths import clean_filepath_name
+    from stylemapper.helpers.validate_paths import clean_filepath_name
 except ModuleNotFoundError:
     from helpers.validate_paths import clean_filepath_name
 
@@ -54,7 +54,7 @@ class CSSInfo():
                 if each_element not in self.parsed_contents['elements']:
                     self.parsed_contents['elements'].append(each_element)
 
-            # Anything else is not something tracked in this version of RedundantCSS
+            # Anything else is not something tracked in this version of StyleMapper
             else:
                 continue
             

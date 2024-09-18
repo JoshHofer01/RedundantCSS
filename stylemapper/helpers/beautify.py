@@ -3,7 +3,7 @@ from tabulate import tabulate
 
 """beautify.py handles the majority of command line outputs. 
 The 'all' case for both html and css creates an index based on the largest list of selectors 
-found in the entire dictionary provided by redundantcss.py. The tabulate_css/html function is
+found in the entire dictionary provided by stylemapper.py. The tabulate_css/html function is
 NOT used on the 'case 'all'' as different parameters are being passed that would make
 for a convoluted global function."""
 
@@ -41,7 +41,7 @@ def css(result: list, arg: str):
             print(tabulate(result, showindex=range(1, index+1), headers="keys", tablefmt='rounded_outline'))
 
         case _:
-            return ["Error processing chosen arg. Use 'redundantcss [-u or -h]' for help."]
+            return ["Error processing chosen arg. Use 'stylemapper [-u or -h]' for help."]
         
 
 def html(result: list, arg: str):
@@ -72,7 +72,7 @@ def html(result: list, arg: str):
             print(tabulate(result, showindex=range(1, index+1), headers="keys", tablefmt='rounded_outline'))
 
         case _:
-            return ["Error processing chosen arg. Use 'redundantcss [-u or -h]' for help."]
+            return ["Error processing chosen arg. Use 'stylemapper [-u or -h]' for help."]
 
 # Creates a table with the information on unused classes in all
 # HTML files provided by the user. The table provides info on how

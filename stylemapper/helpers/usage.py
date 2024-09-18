@@ -1,9 +1,9 @@
 usage = """
-USAGES: redundantcss [-h / --help | -u / --usage]
-        redundantcss --compare 'stylesheet_path' 'html_folder_path'
-        redundantcss --getcss [choices] 'stylesheet_path'
-        redundantcss --gethtml [choices] 'html_file_path' | 'html_folder_path'
-        To see argument choices, please run 'redundantcss -h'
+USAGES: stylemapper [-h / --help | -u / --usage]
+        stylemapper --compare 'stylesheet_path' 'html_folder_path'
+        stylemapper --getcss [choices] 'stylesheet_path'
+        stylemapper --gethtml [choices] 'html_file_path' | 'html_folder_path'
+        To see argument choices, please run 'stylemapper -h'
 
 Keyword arguments:
     No argument: FEATURE COMING SOON (This will scan your entire working directory from the root folder

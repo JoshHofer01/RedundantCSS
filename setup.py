@@ -7,12 +7,12 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.1.2'
+VERSION = '1.0.0'
 DESCRIPTION = 'Provides HTML & CSS information based on keyword arguments and filepaths, including styling, unused classes, and other relevant data.'
 
 # Setting up
 setup(
-    name="redundantcss",
+    name="stylemapper",
     version=VERSION,
     
     author="Josh Hofer",
@@ -22,7 +22,7 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     install_requires=['beautifulsoup4', 'tabulate'],
-    keywords=['python', 'css', 'html', 'redundantcss', 'remove unused css'],
+    keywords=['python', 'css', 'html', 'front-end', 'remove unused css'],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
@@ -34,10 +34,10 @@ setup(
     ],
     entry_points={
       'console_scripts': [
-        'redundantcss=redundantcss.redundantcss:main',
+        'stylemapper=stylemapper.stylemapper:main',
       ],
     },
     project_urls={
-        "Source": "https://github.com/JoshHofer01/RedundantCSS",
+        "Source": "https://github.com/JoshHofer01/StyleMapper",
     }
 )

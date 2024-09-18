@@ -1,6 +1,6 @@
 import argparse
 try:
-    from redundantcss.helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
+    from stylemapper.helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
 except ModuleNotFoundError:
     from helpers.validate_paths import is_css_file, is_html_file, retrieve_html_paths
 
@@ -66,7 +66,7 @@ class GetCSSPath(argparse.Action):
                     needed_choices.add(value)
                 else:
                     if not is_css_file(value):
-                        parser.error(f"'{value}' is an invalid stylesheet path. Use 'redundantcss [-u or -h]' for help.")
+                        parser.error(f"'{value}' is an invalid stylesheet path. Use 'stylemapper [-u or -h]' for help.")
 
                     if stylesheet_path:
                         parser.error(f"Please check your choices are spelt correctly, or make sure you only provide ONE stylesheet path")
@@ -101,7 +101,7 @@ class CheckComparisonPaths(argparse.Action):
                 parser.error(f"'{stylesheet}' is not a valid CSS file")
             paths.append(stylesheet)
 
-            # Passing a folder is critical as to follow the users expected use of redundantcss
+            # Passing a folder is critical as to follow the users expected use of stylemapper
             # Specific error messages can be used, however, due to accepting a folder instead of path.
             try:
                 html_paths = retrieve_html_paths(html_folder)
@@ -123,15 +123,15 @@ class CheckComparisonPaths(argparse.Action):
 
 def create_flags():
     parser = argparse.ArgumentParser(
-        prog = "redundantcss",
+        prog = "stylemapper",
         description = "This script analyzes a stylesheets and templates, providing information regarding classes & styling used.",
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.usage = """redundantcss [-h / --help | -u / --usage]
-       redundantcss --compare 'stylesheet_path' 'html_folder_path'
-       redundantcss --getcss [choices] 'stylesheet_path'
-       redundantcss --gethtml [choices] 'html_file_path' | 'html_folder_path'
-       Use 'redundantcss -u | --usage' for more info."""
+    parser.usage = """stylemapper [-h / --help | -u / --usage]
+       stylemapper --compare 'stylesheet_path' 'html_folder_path'
+       stylemapper --getcss [choices] 'stylesheet_path'
+       stylemapper --gethtml [choices] 'html_file_path' | 'html_folder_path'
+       Use 'stylemapper -u | --usage' for more info."""
 
     # Group ensures argparse error handles multiple args on command line
     group = parser.add_mutually_exclusive_group()
@@ -167,7 +167,7 @@ elements.\n
 You MUST include at least one choice from CHOICES after --gethtml. 
 You may also pass '.html' files as extra arguments if you want to 
 only scan specific files. If no path or folder is passed an extra 
-argument, redundantcss will scan entire directory for all instances 
+argument, stylemapper will scan entire directory for all instances 
 of '.html' files to read and return info based on your choice.
 --------------------------------------------
 classes_html: gets all classes used within html files
